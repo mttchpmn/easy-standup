@@ -1,12 +1,15 @@
+// TODO - Make polymorphic to reduce coupling
 class InputConverter {
     private _greeting: string = "🌅 Morning team!!!";
     private _focus: string = "🎯 Current Focus:";
     private _meeting: string = "🗓️ Meetings:";
+    private _blocker: string = "❗ Blockers:";
     private _inProgress: string = "💻 Tasks In Progress:";
     private _todo: string = "📋 Tasks To Do:";
 
     private _focusLines: string[] = [];
     private _meetingLines: string[] = [];
+    private _blockerLines: string[] = [];
     private _taskLinesInProgress: string[] = [];
     private _taskLinesTodo: string[] = [];
 
@@ -50,6 +53,9 @@ class InputConverter {
             case "o":
                 this._meetingLines.push(this.stripBullet(line));
                 break;
+            case "!":
+                this._blockerLines.push(this.stripBullet(line));
+                break;
             case "-":
                 this._taskLinesInProgress.push(this.stripBullet(line));
                 break;
@@ -92,11 +98,14 @@ class InputConverter {
     }
 
     public generateHtmlOutput() {
+        if (!this.hasContent()) return null;
+
         return (
             <div>
                 <p><strong>{this._greeting}</strong></p><br/>
                 {this.getHtmlBlock(this._focus, this._focusLines)}
                 {this.getHtmlBlock(this._meeting, this._meetingLines)}
+                {this.getHtmlBlock(this._blocker, this._blockerLines)}
                 {this.getHtmlBlock(this._inProgress, this._taskLinesInProgress)}
                 {this.getHtmlBlock(this._todo, this._taskLinesTodo)}
             </div>
@@ -104,6 +113,8 @@ class InputConverter {
     }
 
     private getHtmlBlock(headline: string, lines: string[]) {
+        if (lines.length < 1) return null;
+
         return (
             <div>
                 <p><strong>{headline}</strong></p>
@@ -113,6 +124,18 @@ class InputConverter {
                 <br/>
             </div>
         )
+    }
+
+    private hasContent(): boolean {
+        const allLines = [
+            this._focusLines,
+            this._meetingLines,
+            this._blockerLines,
+            this._taskLinesInProgress,
+            this._taskLinesTodo
+        ]
+
+        return allLines.some(arr => arr.length > 0);
     }
 
     private getTextBlock(headline: string, lines: string[]): string {

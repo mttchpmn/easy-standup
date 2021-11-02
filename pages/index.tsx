@@ -23,6 +23,7 @@ const Home: NextPage = () => {
           Daily updates made simple.
         </p>
 
+
         <div className={styles.grid}>
             <StandupInput />
         </div>
@@ -30,14 +31,11 @@ const Home: NextPage = () => {
 
       <footer className={styles.footer}>
         <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+          href="https://github.com/mttchpmn"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
+          Made with love by @mttchpmn
         </a>
       </footer>
     </div>

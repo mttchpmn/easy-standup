@@ -4,14 +4,18 @@ class InputConverter {
     private _focus: string = "🎯 Current Focus:";
     private _meeting: string = "🗓️ Meetings:";
     private _blocker: string = "❗ Blockers:";
+    private _complete: string = "✔️ Tasks completed";
     private _inProgress: string = "💻 Tasks In Progress:";
     private _todo: string = "📋 Tasks To Do:";
+    private _questions: string = "❓ Questions:";
 
     private _focusLines: string[] = [];
     private _meetingLines: string[] = [];
     private _blockerLines: string[] = [];
+    private _taskLinesComplete: string[] = [];
     private _taskLinesInProgress: string[] = [];
     private _taskLinesTodo: string[] = [];
+    private _questionLines: string[] = [];
 
     constructor() {
     }
@@ -44,9 +48,9 @@ class InputConverter {
     }
 
     private parseLine(line: string) {
-        var bullet = line[0];
+        var token = line[0];
 
-        switch (bullet) {
+        switch (token) {
             case "*":
                 this._focusLines.push(this.stripBullet(line));
                 break;
@@ -56,12 +60,20 @@ class InputConverter {
             case "!":
                 this._blockerLines.push(this.stripBullet(line));
                 break;
+            case "<":
+                this._taskLinesComplete.push(this.stripBullet(line));
+                break;
             case "-":
                 this._taskLinesInProgress.push(this.stripBullet(line));
                 break;
             case ">":
                 this._taskLinesTodo.push(this.stripBullet(line));
                 break;
+            case "?":
+                this._questionLines.push(this.stripBullet(line));
+                break;
+            default:
+                console.error(`ERROR: Token '${token}' not supported`);
         }
     }
 
@@ -77,6 +89,16 @@ class InputConverter {
         const number = match[0].replace(/[\^d]/g, "")
 
         return line.replace(match[0], "") + `(⌚ ${number} days)`
+    }
+
+    private parseLineTicketNumber(line: string): string {
+        const ticketNumberRegex = /#\d{4}/;
+
+        const match = line.match(ticketNumberRegex);
+
+        if (!match) return line;
+
+        return "";
     }
 
     private generateTextOutput(): string {
@@ -106,8 +128,10 @@ class InputConverter {
                 {this.getHtmlBlock(this._focus, this._focusLines)}
                 {this.getHtmlBlock(this._meeting, this._meetingLines)}
                 {this.getHtmlBlock(this._blocker, this._blockerLines)}
+                {this.getHtmlBlock(this._complete, this._taskLinesComplete)}
                 {this.getHtmlBlock(this._inProgress, this._taskLinesInProgress)}
                 {this.getHtmlBlock(this._todo, this._taskLinesTodo)}
+                {this.getHtmlBlock(this._questions, this._questionLines)}
             </div>
         );
     }

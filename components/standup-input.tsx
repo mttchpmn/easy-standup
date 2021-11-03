@@ -36,8 +36,10 @@ const StandupInput = () => {
                         <li><strong>*</strong> = focus item</li>
                         <li><strong>o</strong> = meeting</li>
                         <li><strong>!</strong> = blocker</li>
+                        <li><strong>{"<"}</strong> = completed task</li>
                         <li><strong>-</strong> = current task</li>
                         <li><strong>{">"}</strong> = future task</li>
+                        <li><strong>?</strong> = question</li>
                     </ul>
                 </div>}
             </div>
